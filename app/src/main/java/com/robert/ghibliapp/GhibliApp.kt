@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -68,8 +69,6 @@ fun GhibliApp(
                     filmId = id,
                     navigateBack = {
                         navController.navigateUp()
-                    },
-                    upPressed = {
                     }
                 )
             }
@@ -93,7 +92,9 @@ private fun BottomBar(
     modifier: Modifier = Modifier
 ) {
     BottomNavigation(
-        modifier = modifier
+        modifier = modifier,
+        backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.primary
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
