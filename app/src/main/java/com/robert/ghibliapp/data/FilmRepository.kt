@@ -37,6 +37,15 @@ class FilmRepository {
         }
     }
 
+    fun searchFilms(query: String): Flow<List<FavoriteFilm>> {
+        return getAllFilms()
+            .map { favoriteFilms ->
+                favoriteFilms.filter {
+                    it.film.title.contains(query, ignoreCase = true)
+                }
+            }
+    }
+
     fun updateFavoriteFilm(rewardId: Long, isFavorite: Boolean): Flow<Boolean> {
         val index = favoriteFilms.indexOfFirst { it.film.id == rewardId }
         val result = if (index >= 0) {
