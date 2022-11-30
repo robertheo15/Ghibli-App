@@ -13,7 +13,7 @@ class FilmRepository {
     init {
         if (favoriteFilms.isEmpty()) {
             FakeFilmDataSource.dummyFilms.forEach {
-                favoriteFilms.add(FavoriteFilm(it, true))
+                favoriteFilms.add(FavoriteFilm(it, false))
             }
         }
     }
