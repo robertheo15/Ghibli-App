@@ -212,7 +212,10 @@ private fun MovieInfo(
     runningTime: String,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.fillMaxWidth()) {
+    Column(
+        modifier
+            .fillMaxWidth()
+    ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = title,
