@@ -24,8 +24,8 @@ class HomeViewModel(
                 .catch {
                     _uiState.value = UiState.Error(it.message.toString())
                 }
-                .collect { orderRewards ->
-                    _uiState.value = UiState.Success(orderRewards)
+                .collect { films ->
+                    _uiState.value = UiState.Success(films)
                 }
         }
     }
