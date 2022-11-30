@@ -21,7 +21,7 @@ import com.robert.ghibliapp.di.Injection
 import com.robert.ghibliapp.model.FavoriteFilm
 import com.robert.ghibliapp.ui.ViewModelFactory
 import com.robert.ghibliapp.ui.common.UiState
-import com.robert.ghibliapp.ui.components.MovieCard
+import com.robert.ghibliapp.ui.components.FilmItem
 
 @Composable
 fun FavoriteScreen(
@@ -71,7 +71,7 @@ fun FavoriteContent(
         modifier = modifier.testTag("FilmList")
     ) {
         items(favoriteFilm) { data ->
-            MovieCard(
+            FilmItem(
                 image = data.film.image,
                 title = data.film.title,
                 releaseDate = data.film.releaseDate,

@@ -111,7 +111,7 @@ private fun BottomBar(
                 screen = Screen.Favorite
             ),
             NavigationItem(
-                title = stringResource(R.string.menu_profile),
+                title = stringResource(R.string.menu_about),
                 icon = Icons.Default.AccountCircle,
                 screen = Screen.Profile
             )

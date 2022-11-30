@@ -52,7 +52,6 @@ fun ProfileScreen() {
                 fontSize = 22.sp
             )
         }
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()

@@ -28,7 +28,7 @@ import coil.compose.AsyncImage
 import com.robert.ghibliapp.ui.theme.GhibliAppTheme
 
 @Composable
-fun MovieCard(
+fun FilmItem(
     title: String,
     releaseDate: String,
     image: String,
@@ -96,8 +96,8 @@ fun MovieCard(
 @Composable
 @Preview(showBackground = true)
 fun FilmItemPreview() {
-    GhibliAppTheme() {
-        MovieCard(
+    GhibliAppTheme {
+        FilmItem(
             "The Tale of the Princess Kaguya",
             "2013",
             "https://image.tmdb.org/t/p/w600_and_h900_bestv2/mWRQNlWXYYfd2z4FRm99MsgHgiA.jpg"
