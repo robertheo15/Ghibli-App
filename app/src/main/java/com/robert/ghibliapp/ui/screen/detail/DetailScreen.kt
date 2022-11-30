@@ -43,7 +43,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.robert.ghibliapp.di.Injection
 import com.robert.ghibliapp.ui.ViewModelFactory
 import com.robert.ghibliapp.ui.common.UiState
-import com.robert.ghibliapp.ui.navigation.MovieDetailsTopBar
+import com.robert.ghibliapp.ui.navigation.DetailTopBar
 import com.robert.ghibliapp.ui.theme.GhibliAppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -73,7 +73,7 @@ fun DetailScreen(
                     scaffoldState = scaffoldState,
                     backgroundColor = MaterialTheme.colors.background,
                     topBar = {
-                        MovieDetailsTopBar(
+                        DetailTopBar(
                             title = data.film.title,
                             isFavorite = isFavorite,
                             onFavoriteClicked = {

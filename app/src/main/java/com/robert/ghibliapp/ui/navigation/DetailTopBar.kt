@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
-fun MovieDetailsTopBar(
+fun DetailTopBar(
     title: String,
     isFavorite: Boolean,
     onFavoriteClicked: () -> Unit,
