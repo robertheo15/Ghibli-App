@@ -10,15 +10,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +45,8 @@ import com.robert.ghibliapp.ui.ViewModelFactory
 import com.robert.ghibliapp.ui.common.UiState
 import com.robert.ghibliapp.ui.navigation.MovieDetailsTopBar
 import com.robert.ghibliapp.ui.theme.GhibliAppTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
@@ -48,9 +56,11 @@ fun DetailScreen(
             Injection.provideRepository()
         )
     ),
-    navigateBack: () -> Unit,
-    upPressed: () -> Unit
+    navigateBack: () -> Unit
 ) {
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
@@ -58,49 +68,47 @@ fun DetailScreen(
             }
             is UiState.Success -> {
                 val data = uiState.data
+                var isFavorite by remember { mutableStateOf(data.isFavoriteFilm) }
                 Scaffold(
+                    scaffoldState = scaffoldState,
                     backgroundColor = MaterialTheme.colors.background,
                     topBar = {
                         MovieDetailsTopBar(
                             title = data.film.title,
-                            isFavorite = data.isFavoriteFilm,
+                            isFavorite = isFavorite,
                             onFavoriteClicked = {
-//                                viewModel.onFavoriteClicked(
-//                                    FilmEntity(
-//                                        id = state.filmDetail?.id.toString(),
-//                                        title = state.filmDetail?.title.toString(),
-//                                        releaseDate = state.filmDetail?.releaseDate.toString(),
-//                                        image = state.filmDetail?.image.toString()
-//                                    )
-//                                )
+                                coroutineScope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        message = "Film berhasil ditambahkan/dihapus ke favorite"
+                                    )
+                                }
+                                isFavorite = !isFavorite
+                                viewModel.updateFavoriteFilm(
+                                    data.film,
+                                    isFavorite
+                                )
                             },
-                            upPressed = navigateBack
+                            navigateBack = navigateBack
                         )
                     }
                 ) { padding ->
-                    LazyColumn(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(padding)
                     ) {
-                        item {
-                        }
+                        DetailContent(
+                            image = data.film.image,
+                            movieBanner = data.film.movieBanner,
+                            title = data.film.title,
+                            originalTitle = data.film.originalTitle,
+                            releaseDate = data.film.releaseDate,
+                            runningTime = data.film.runningTime,
+                            director = data.film.director,
+                            producer = data.film.producer,
+                            description = data.film.description
+                        )
                     }
-                    DetailContent(
-                        image = data.film.image,
-                        movieBanner = data.film.movieBanner,
-                        title = data.film.title,
-                        originalTitle = data.film.originalTitle,
-                        releaseDate = data.film.releaseDate,
-                        runningTime = data.film.runningTime,
-                        director = data.film.director,
-                        producer = data.film.producer,
-                        description = data.film.description,
-                        onAddToFavorite = { isFavorite ->
-                            viewModel.updateFavoriteFilm(data.film, isFavorite)
-                            upPressed()
-                        }
-                    )
                 }
             }
             is UiState.Error -> {}
@@ -119,12 +127,8 @@ fun DetailContent(
     releaseDate: String,
     runningTime: String,
     description: String,
-    onAddToFavorite: (isFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-//    var totalPoint by rememberSaveable { mutableStateOf(0) }
-//    var orderCount by rememberSaveable { mutableStateOf(count) }
-
     Column(modifier = modifier) {
         Column(
             modifier = Modifier
@@ -187,7 +191,7 @@ fun DetailContent(
                         )
                     }
                     Text(
-                        text = "Produced by ${producer}\nDirected by ${director}\n\n${description}",
+                        text = "Produced by ${producer}\nDirected by ${director}\n\n$description",
                         style = MaterialTheme.typography.subtitle1,
                         modifier = Modifier
                             .padding(16.dp)
@@ -239,8 +243,7 @@ fun DetailContentPreview() {
             producer = "Yoshiaki Nishimura",
             director = "Isao Takahata",
             description = "A bamboo cutter named Sanuki no Miyatsuko discovers a miniature girl inside a glowing bamboo shoot. Believing her to be a divine presence, he and his wife decide to raise her as their own, calling her 'Princess'.",
-            runningTime = "137",
-            onAddToFavorite = {}
+            runningTime = "137"
         )
     }
 }

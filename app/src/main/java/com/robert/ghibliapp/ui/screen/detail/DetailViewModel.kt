@@ -27,7 +27,7 @@ class DetailViewModel(
 
     fun updateFavoriteFilm(film: Film, isFavorite: Boolean) {
         viewModelScope.launch {
-            repository.updateFavoriteFilm(film.id, !isFavorite)
+            repository.updateFavoriteFilm(film.id, isFavorite)
         }
     }
 }
